@@ -11,6 +11,8 @@
 # ALSO, SEE THINGS OF THE FORM -- THANK ALY AND ARA --
 #
 #########################################################
+#Most of part, we don't need to worry.
+
 
 # Pandas is only used to pretty print the table contents.
 import pandas as pd
@@ -39,6 +41,8 @@ class RDBDataTable():
     # specific connection on object creation.
     #
     # NOTE: You may just use the default connector if you want.
+    # We can just use this one without worrying about the connection.
+
     _default_connect_info = {
         'host': 'localhost',
         'user': 'root',
@@ -102,6 +106,7 @@ class RDBDataTable():
         self.get_row_count()
         self.get_sample_rows()
         # DFF Remove below.
+        # No need to worry about this.
         self.get_related_resources()
 
     def __str__(self):
@@ -138,7 +143,7 @@ class RDBDataTable():
 
         # Hint. Google "get primary key columns mysql"
         # Hint. THE ORDER OF THE COLUMNS IN THE KEY DEFINITION MATTERS.
-
+        # Teacher has done in class (??)
     def get_sample_rows(self, no_of_rows=_rows_to_print):
         """
 
@@ -157,6 +162,8 @@ class RDBDataTable():
         # -- THANK ALY AND ARA --
         # Aly and Ara told me to get rid of this requirement or they would be unhappy.
         #
+        
+
         pass
 
     def get_links(self, target_table = None):

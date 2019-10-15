@@ -6,6 +6,15 @@ import src.data_service.RDBDataTable as RDBDataTable
 # It is inefficient to create an instance of RDBDataTable for each request.  This is a cache of created
 # instances.
 _db_tables = {}
+_conn = pymysql.connect(
+    host= "localhost",
+    port= 3306,
+    user = "dbuser",
+    password="dbuserdbuser",
+    db="lahman2019clean",
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
 
 def get_rdb_table(table_name, db_name, key_columns=None, connect_info=None):
     """
@@ -22,6 +31,7 @@ def get_rdb_table(table_name, db_name, key_columns=None, connect_info=None):
     # We use the fully qualified table name as the key into the cache, e.g. lahman2019clean.people.
     key = db_name + "." + table_name
 
+    #Do not create the RDB table directly, th function will do this for you.
     # Have we already created and cache the data table?
     result = _db_tables.get(key, None)
 
@@ -51,9 +61,25 @@ def get_databases():
 
     :return: A list of databases/schema at this endpoint.
     """
-
+    #Run query, get a list of database and return.
     # -- TO IMPLEMENT --
+    #sql call here.
+    result = ["db1", "db2", "db3"]
+    q = "show database"
+    res, d = dbutils.run_q(q, conn=_conn)
+
+    return d
+
+
+def get_tables(dbname):
+ #Run query, get a list of database and return.
+    # -- TO IMPLEMENT --
+    #sql call here.
+    result = ["db1", "db2", "db3"]
+    
+    
     pass
+
 
 
 

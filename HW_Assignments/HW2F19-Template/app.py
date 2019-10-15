@@ -14,6 +14,7 @@
 from flask import Flask, Response, request
 from datetime import datetime
 import json
+
 import src.data_service.data_table_adaptor as dta
 
 import logging
@@ -189,8 +190,12 @@ def dbs():
 
     # Hint: Implement the function in data_table_adaptor
     #
+    inputs = log_and_extract_input(demo, None)
+    res = dta.get_databases()
 
+    rsp = Response(json.dumps(res), status=200, content_type="application/json")
 
+    return rsp
 
 @application.route("/api/databases/<dbname>", methods=["GET"])
 def tbls(dbname):
@@ -206,8 +211,13 @@ def tbls(dbname):
 
     # Hint: Implement the function in data_table_adaptor
     #
+    inputs = log_and_extract_input(demo, None)
+    res = dta.get_databases()
+    rsp = Response(json.dumps(res), status=200, content_type="application/json")
 
+    return rsp
 
+#API, lahman2019, people, ...
 @application.route('/api/<dbname>/<resource>/<primary_key>', methods=['GET', 'PUT', 'DELETE'])
 def resource_by_id(dbname, resource, primary_key):
     """
@@ -230,12 +240,18 @@ def resource_by_id(dbname, resource, primary_key):
         # -- TO IMPLEMENT --
 
         if request.method == 'GET':
-
             #
             # SOME CODE GOES HERE
             #
             # -- TO IMPLEMENT --
-            pass
+
+            fields = context.get("fields", None)
+            r_table = dta.get_rdb_table(resource, dbname)
+            key = primary_key.split(_key_delimiter)
+            res = r_table.find_by_primary_key(key, field_list=fields)
+
+            rsp = Response(json.dumps(res), status=200, content_type="application/json")
+            return rsp
 
         elif request.method == 'DELETE':
             #
