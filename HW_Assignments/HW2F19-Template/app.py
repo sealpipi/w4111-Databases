@@ -211,8 +211,7 @@ def tbls(dbname):
 
     # Hint: Implement the function in data_table_adaptor
     #
-    inputs = log_and_extract_input(demo, None)
-    res = dta.get_databases()
+    res = dta.get_tables()
     rsp = Response(json.dumps(res), status=200, content_type="application/json")
 
     return rsp

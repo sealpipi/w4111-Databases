@@ -64,10 +64,12 @@ def get_databases():
     #Run query, get a list of database and return.
     # -- TO IMPLEMENT --
     #sql call here.
-    result = ["db1", "db2", "db3"]
-    q = "show database"
-    res, d = dbutils.run_q(q, conn=_conn)
+    #result = ["db1", "db2", "db3"]
+    sql = "select " + "DATABASE()"
 
+    res, d = dbutils.run_q(sql, conn=_conn)
+
+    print('res, d = {0} {1}'.format(res, d))
     return d
 
 
@@ -75,10 +77,14 @@ def get_tables(dbname):
  #Run query, get a list of database and return.
     # -- TO IMPLEMENT --
     #sql call here.
-    result = ["db1", "db2", "db3"]
-    
-    
-    pass
+    #result = ["db1", "db2", "db3"]
+
+    sql = "select TABLE_NAME from INFORMATION_SCHEMA.TABLES where "
+    sql += """TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='%s'""" % (dbname)
+
+    res, table = dbutils.run_q(sql, conn=_conn)
+
+    return table
 
 
 
