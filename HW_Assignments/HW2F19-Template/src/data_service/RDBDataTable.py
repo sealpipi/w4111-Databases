@@ -45,7 +45,7 @@ class RDBDataTable():
 
     _default_connect_info = {
         'host': 'localhost',
-        'user': 'root',
+        'user': 'dbuser',
         'password': 'dbuserdbuser',
         'db': 'lahman2019clean',
         'port': 3306
@@ -132,6 +132,12 @@ class RDBDataTable():
         """
 
         # -- TO IMPLEMENT --
+        sql = "SELECT COUNT(*) FROM"
+        sql += self._db_name
+        res, row_count = dbutils.run_q(sql, conn=self._cnx)
+
+        print('[Get_row_count] row count = {0} {1}'.format(res, row_count))
+        self._row_count = res
 
     def get_primary_key_columns(self):
         """
@@ -144,6 +150,19 @@ class RDBDataTable():
         # Hint. Google "get primary key columns mysql"
         # Hint. THE ORDER OF THE COLUMNS IN THE KEY DEFINITION MATTERS.
         # Teacher has done in class (??)
+        print("get_primary_key_columns")
+        sql = """DESCRIBE `%s`.`%s` """ % (self._db_name, self._table_name)
+        res, keys = dbutils.run_q(sql, conn=self._cnx)
+        key_col = list()
+        for item in keys:
+            key_col.append(item.get('Field'))
+            #print('key: {0}'.format(item.get('Field')))
+
+
+        print('[Get_primary_key_cols] res, keys = {0} {1}'.format(res, keys))
+        print('[Get_primary_key_cols] key list = {0} {1}'.format(res, key_col))
+        self._key_columns = key_col
+
     def get_sample_rows(self, no_of_rows=_rows_to_print):
         """
 

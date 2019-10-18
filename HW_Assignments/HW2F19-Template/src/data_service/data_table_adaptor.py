@@ -34,12 +34,13 @@ def get_rdb_table(table_name, db_name, key_columns=None, connect_info=None):
     #Do not create the RDB table directly, th function will do this for you.
     # Have we already created and cache the data table?
     result = _db_tables.get(key, None)
-
+    print('[DTA] result {0}'.format(result))
     # We have not yet accessed this table.
     if result is None:
 
         # Make an RDBDataTable for this database table.
         result = RDBDataTable.RDBDataTable(table_name, db_name, key_columns, connect_info)
+        print('[DTA]get result {0}'.format(result))
 
         # Add to the cache.
         _db_tables[key] = result
