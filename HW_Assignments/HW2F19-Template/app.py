@@ -244,6 +244,8 @@ def resource_by_id(dbname, resource, primary_key):
 
         fields = context.get("fields", None)
         print('the fields are: {0}'.format(fields))
+        body = context.get("body", None)
+        print('the body is: {0}'.format(body))
 
         key = primary_key.split(_key_delimiter)
         print('the keys are: {0}'.format(key))
@@ -279,7 +281,7 @@ def resource_by_id(dbname, resource, primary_key):
             # SOME CODE GOES HERE
             #
             # -- TO IMPLEMENT --
-            res = r_table.update_by_key(key_fields=key)
+            res = r_table.update_by_key(key_fields=key,new_values=body)
             rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
 
             print('[UPDATE_BY_KEY] {0}'.format(rsp))
@@ -308,7 +310,7 @@ def get_resource(dbname, resource_name):
         print('the template is (get_resource): {0}'.format(body))
 
         fields = context.get("fields", None)
-        print('the fields are: {0}'.format(body))
+        print('the fields are: {0}'.format(fields))
 
         r_table = dta.get_rdb_table(resource_name, dbname)
 
@@ -319,7 +321,7 @@ def get_resource(dbname, resource_name):
             # -- TO IMPLEMENT --
 
             res = r_table.find_by_template(body, fields)
-            print('the result is (get_resource): {0}'.format(res))
+            print('[GET] the result is: {0}'.format(res))
 
             rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
 
@@ -330,7 +332,12 @@ def get_resource(dbname, resource_name):
             # SOME CODE GOES HERE
             #
             # -- TO IMPLEMENT --
-            pass
+            res = r_table.insert(body)
+            print('[POST] the result is : {0}'.format(res))
+
+            rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+
+            return rsp
         else:
             result = "Invalid request."
             return result, 400, {'Content-Type': 'text/plain; charset=utf-8'}
