@@ -192,7 +192,7 @@ def dbs():
     #
     inputs = log_and_extract_input(demo, None)
     res = dta.get_databases()
-
+    print('database list= {0}'.format(res))
     rsp = Response(json.dumps(res), status=200, content_type="application/json")
 
     return rsp
@@ -211,8 +211,9 @@ def tbls(dbname):
 
     # Hint: Implement the function in data_table_adaptor
     #
-    res = dta.get_tables(dbname)
-    rsp = Response(json.dumps(res), status=200, content_type="application/json")
+    inputs = log_and_extract_input(demo, None)
+    res1 = dta.get_tables(dbname)
+    rsp = Response(json.dumps(res1), status=200, content_type="application/json")
 
     return rsp
 
@@ -227,6 +228,7 @@ def resource_by_id(dbname, resource, primary_key):
     :return: Result of operations.
     """
 
+    print('the primary keys are: {0}'.format(primary_key))
     result = None
 
     try:
@@ -237,19 +239,26 @@ def resource_by_id(dbname, resource, primary_key):
         # SOME CODE GOES HERE
         #
         # -- TO IMPLEMENT --
+        print('the primary keys are: {0}'.format(primary_key))
+        print('the resource are: {0}'.format(resource))
+
+        fields = context.get("fields", None)
+        print('the fields are: {0}'.format(fields))
+
+        key = primary_key.split(_key_delimiter)
+        print('the keys are: {0}'.format(key))
+        r_table = dta.get_rdb_table(resource, dbname)
+        # print('the r_table are: {0}'.format(r_table))
 
         if request.method == 'GET':
             #
             # SOME CODE GOES HERE
             #
             # -- TO IMPLEMENT --
-
-            fields = context.get("fields", None)
-            r_table = dta.get_rdb_table(resource, dbname)
-            key = primary_key.split(_key_delimiter)
             res = r_table.find_by_primary_key(key, field_list=fields)
+            print('the res are: {0}'.format(res))
 
-            rsp = Response(json.dumps(res), status=200, content_type="application/json")
+            rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
             return rsp
 
         elif request.method == 'DELETE':
@@ -257,14 +266,24 @@ def resource_by_id(dbname, resource, primary_key):
             # SOME CODE GOES HERE
             #
             # -- TO IMPLEMENT --
-            pass
+
+            res = r_table.delete_by_key(key_fields=key)
+            rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+
+            print('[DELETE_BY_KEY] {0}'.format(rsp))
+
+            return rsp
 
         elif request.method == 'PUT':
             #
             # SOME CODE GOES HERE
             #
             # -- TO IMPLEMENT --
-            pass
+            res = r_table.update_by_key(key_fields=key)
+            rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+
+            print('[UPDATE_BY_KEY] {0}'.format(rsp))
+            return rsp
 
     except Exception as e:
         print(e)
@@ -283,14 +302,28 @@ def get_resource(dbname, resource_name):
         # SOME CODE GOES HERE
         #
         # -- TO IMPLEMENT --
+        print('the table name is: {0}'.format(resource_name))
 
+        body = context.get("body", None)
+        print('the template is (get_resource): {0}'.format(body))
+
+        fields = context.get("fields", None)
+        print('the fields are: {0}'.format(body))
+
+        r_table = dta.get_rdb_table(resource_name, dbname)
 
         if request.method == 'GET':
             #
             # SOME CODE GOES HERE
             #
             # -- TO IMPLEMENT --
-            pass
+
+            res = r_table.find_by_template(body, fields)
+            print('the result is (get_resource): {0}'.format(res))
+
+            rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+
+            return rsp
 
         elif request.method == 'POST':
             #
@@ -311,6 +344,7 @@ def get_by_path(dbname, parent_name, primary_key, target_name):
 
     # Do not implement
 
+    print('the primary keys are (get_by_path): {0}'.format(primary_key))
     result = " -- THANK ALY AND ARA -- "
 
     return result, 501, {'Content-Type': 'application/json; charset=utf-8'}
@@ -323,6 +357,7 @@ def get_by_path(dbname, parent_name, primary_key, target_name):
 def get_by_path_key(dbname, parent_name, primary_key, target_name, target_key):
     # Do not implement
 
+    print('the primary keys are (get_by_path_key): {0}'.format(target_key))
     result = " -- THANK ALY AND ARA -- "
 
     return result, 501, {'Content-Type': 'application/json; charset=utf-8'}
